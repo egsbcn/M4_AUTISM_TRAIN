@@ -23,7 +23,7 @@ def training_pipeline(path, model_info_db_name="autismdb"):
     # Carga de la configuración de entrenamiento
     model_config = load_model_config(model_info_db_name)["model_config"]
     # variable dependiente a usar
-    target = model_config["Class/ASD"]
+    target = model_config["target"]
     # columnas a retirar
     cols_to_remove = model_config["cols_to_remove"]
 

@@ -23,7 +23,7 @@ def evaluate_model(model, X_test, y_test, timestamp, model_name):
     y_pred = model.predict(X_test)
 
     # extraer la importancia de variables
-    feature_importance_values = model.feature_importances_
+    #feature_importance_values = model.feature_importances_
 
     # Nombre de variables
     features = list(X_test.columns)
