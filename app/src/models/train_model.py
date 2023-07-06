@@ -5,9 +5,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from cloudant.query import Query
 import time
+from pymongo import MongoClient
 
-
-def training_pipeline(path, model_info_db_name="autismdb"):
+def training_pipeline(model_info_db_name="autismdb"):
     """
     Función para gestionar el pipeline completo de entrenamiento
     del modelo.
@@ -27,11 +27,20 @@ def training_pipeline(path, model_info_db_name="autismdb"):
     # columnas a retirar
     cols_to_remove = model_config["cols_to_remove"]
 
+    #variables para la conexión a la MongoDB
+    cluster = MongoClient(
+        model_config["cluster"]
+    )
+
+    db = cluster[model_config["db"]]
+    collection = db[model_config["collection"]]
+
+
     # timestamp usado para versionar el modelo y los objetos
     ts = time.time()
 
     # carga y transformación de los datos de train y test
-    train_df, test_df = make_dataset(path, ts, target, cols_to_remove)
+    train_df, test_df = make_dataset(ts, target, cols_to_remove, cluster, db, collection)
 
     # separación de variables independientes y dependiente
     y_train = train_df[target]

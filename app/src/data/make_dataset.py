@@ -6,7 +6,7 @@ from ..features.feature_engineering import feature_engineering
 from app import cos
 
 
-def make_dataset(path, timestamp, target, cols_to_remove, model_type='LogisticRegression'):
+def make_dataset(timestamp, target, cols_to_remove, cluster, db, collection, model_type='LogisticRegression'):
 
     """
         Función que permite crear el dataset usado para el entrenamiento
@@ -25,7 +25,8 @@ def make_dataset(path, timestamp, target, cols_to_remove, model_type='LogisticRe
     """
 
     print('---> Getting data')
-    df = get_raw_data_from_local(path)
+    #df = get_raw_data_from_local(path)
+    df = get_raw_data_from_mongoDB(cluster, db, collection)
     print('---> Train / test split')
     train_df, test_df = train_test_split(df, test_size=0.2, random_state=50)
     print('---> Transforming data')
@@ -52,6 +53,30 @@ def get_raw_data_from_local(path):
 
     df = pd.read_csv(path)
     return df.copy()
+
+def get_raw_data_from_mongoDB(cluster, db, collection):
+
+    """
+        Función para obtener los datos de una MongoDB
+
+        Args:
+           cluster : Conexión
+           db: nombre bd
+           collection: nombre de la colecicón
+
+        Returns:
+           DataFrame. Dataset con los datos de entrada.
+    """
+
+    cursor = collection.find({})
+
+    # Convertir los registros en una lista de diccionarios
+    documents = list(cursor)
+
+    # Convertir la lista de diccionarios en un dataframe de pandas
+    df = pd.DataFrame(documents)
+
+    return df
 
 
 def transform_data(train_df, test_df, timestamp, target, cols_to_remove):
