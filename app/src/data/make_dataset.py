@@ -6,7 +6,7 @@ from ..features.feature_engineering import feature_engineering
 from app import cos
 
 
-def make_dataset(path, timestamp, target, cols_to_remove, model_type='RandomForest'):
+def make_dataset(path, timestamp, target, cols_to_remove, model_type='LogisticRegression'):
 
     """
         Función que permite crear el dataset usado para el entrenamiento
@@ -141,7 +141,7 @@ def pre_train_data_prep(train_df, test_df, model_type, timestamp, target):
     train_df, test_df = input_missing_values(train_df, test_df, timestamp)
 
     # restringimos el escalado solo a ciertos modelos
-    if model_type.upper() in ['SVM', 'KNN', 'NaiveBayes']:
+    if model_type.upper() in ['SVM', 'KNN', 'NaiveBayes', 'LogisticRegression']:
         print('------> Scaling features')
         train_df, test_df = scale_data(train_df, test_df)
 
